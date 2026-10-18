@@ -1,0 +1,4 @@
+*.o
+__pycache__/
+vector/vect_test
+tokenizer/tokenize
