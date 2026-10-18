@@ -22,6 +22,18 @@ struct vect {
   unsigned int capacity;   /* Maximum number of items the vector can hold before growing. */
 };
 
+/** Make a newly allocated copy of the given string. The caller is
+ *  responsible for freeing the memory occupied by the copy. */
+static char *copy_string(const char *s) {
+  assert(s != NULL);
+
+  char *copy = malloc(strlen(s) + 1);
+  assert(copy != NULL);
+
+  strcpy(copy, s);
+  return copy;
+}
+
 /** Construct a new empty vector. */
 vect_t *vect_new() {
   vect_t *v = malloc(sizeof(vect_t));
@@ -60,42 +72,36 @@ const char *vect_get(vect_t *v, unsigned int idx) {
 char *vect_get_copy(vect_t *v, unsigned int idx) {
   assert(v != NULL);
   assert(idx < v->size);
-
-  char *copy = malloc(strlen(v->data[idx]) + 1);
-  strcpy(copy, v->data[idx]);
-  return copy;
+  return copy_string(v->data[idx]);
 }
 
 /** Set the element at the given index. */
 void vect_set(vect_t *v, unsigned int idx, const char *elt) {
   assert(v != NULL);
   assert(idx < v->size);
+  assert(elt != NULL);
 
   free(v->data[idx]);
-
-  char *copy = malloc(strlen(elt) + 1);
-  strcpy(copy, elt);
-
-  v->data[idx] = copy;
-
+  v->data[idx] = copy_string(elt);
 }
 
 /** Add an element to the back of the vector. */
 void vect_add(vect_t *v, const char *elt) {
   assert(v != NULL);
+  assert(elt != NULL);
 
   if (v->size == v->capacity) {
+    assert(v->capacity <= VECT_MAX_CAPACITY / VECT_GROWTH_FACTOR);
+
     unsigned int new_capacity = v->capacity * VECT_GROWTH_FACTOR;
     char **new_data = realloc(v->data, new_capacity * sizeof(char *));
     assert(new_data != NULL);
+
     v->data = new_data;
     v->capacity = new_capacity;
   }
 
-  char *copy = malloc(strlen(elt) + 1);
-  strcpy(copy, elt);
-
-  v->data[v->size] = copy;
+  v->data[v->size] = copy_string(elt);
   v->size = v->size + 1;
 }
 
