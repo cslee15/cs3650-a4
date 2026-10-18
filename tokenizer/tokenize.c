@@ -10,8 +10,13 @@ int main(int argc, char **argv) {
 
   if (fgets(buffer, BUFFER_SIZE, stdin) != NULL) {
     vect_t *tokens = tokenize(buffer);
+
+    for (unsigned int i = 0; i <vect_size(tokens); i++) {
+      printf("%s\n", vect_get(tokens, i));
+    }
+
+    vect_delete(tokens);
   }
 
-  /* TODO: Print all the tokens, one item per line */
-
+  return 0;
 }
