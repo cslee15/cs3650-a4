@@ -38,9 +38,14 @@ vect_t *vect_new() {
 
 /** Delete the vector, freeing all memory it occupies. */
 void vect_delete(vect_t *v) {
+  assert(v != NULL);
 
-  /* [TODO] Complete the function */
+  for (unsigned int i = 0; i < v->size; i++) {
+    free(v->data[i]);
+  }
 
+  free(v->data);
+  free(v);
 }
 
 /** Get the element at the given index. */
