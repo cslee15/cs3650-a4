@@ -24,10 +24,14 @@ struct vect {
 
 /** Construct a new empty vector. */
 vect_t *vect_new() {
+  vect_t *v = malloc(sizeof(vect_t));
+  assert(v != NULL);
 
-  /* [TODO] Complete the function */
+  v->data = malloc(VECT_INITIAL_CAPACITY * sizeof(char *));
+  assert(v->data != NULL);
 
-  vect_t *v = NULL;
+  v->size = 0;
+  v->capacity = VECT_INITIAL_CAPACITY;
 
   return v;
 }
@@ -43,10 +47,7 @@ void vect_delete(vect_t *v) {
 const char *vect_get(vect_t *v, unsigned int idx) {
   assert(v != NULL);
   assert(idx < v->size);
-
-  /* [TODO] Complete the function */
-
-  return NULL;
+  return v->data[idx];
 }
 
 /** Get a copy of the element at the given index. The caller is responsible
@@ -55,16 +56,22 @@ char *vect_get_copy(vect_t *v, unsigned int idx) {
   assert(v != NULL);
   assert(idx < v->size);
 
-  /* [TODO] Complete the function */
-
-  return NULL;
+  char *copy = malloc(strlen(v->data[idx]) + 1);
+  strcpy(copy, v->data[idx]);
+  return copy;
 }
+
 /** Set the element at the given index. */
 void vect_set(vect_t *v, unsigned int idx, const char *elt) {
   assert(v != NULL);
   assert(idx < v->size);
 
-  /* [TODO] Complete the function */
+  free(v->data[idx]);
+
+  char *copy = malloc(strlen(elt) + 1);
+  strcpy(copy, elt);
+
+  v->data[idx] = copy;
 
 }
 
@@ -72,33 +79,39 @@ void vect_set(vect_t *v, unsigned int idx, const char *elt) {
 void vect_add(vect_t *v, const char *elt) {
   assert(v != NULL);
 
-  /* [TODO] Complete the function */
+  if (v->size == v->capacity) {
+    unsigned int new_capacity = v->capacity * VECT_GROWTH_FACTOR;
+    char **new_data = realloc(v->data, new_capacity * sizeof(char *));
+    assert(new_data != NULL);
+    v->data = new_data;
+    v->capacity = new_capacity;
+  }
 
+  char *copy = malloc(strlen(elt) + 1);
+  strcpy(copy, elt);
+
+  v->data[v->size] = copy;
+  v->size = v->size + 1;
 }
 
 /** Remove the last element from the vector. */
 void vect_remove_last(vect_t *v) {
   assert(v != NULL);
+  assert(v->size > 0);
 
-  /* [TODO] Complete the function */
-
+  free(v->data[v->size - 1]);
+  v->size = v->size - 1;
 }
 
 /** The number of items currently in the vector. */
 unsigned int vect_size(vect_t *v) {
   assert(v != NULL);
-
-  /* [TODO] Complete the function */
-
-  return 0;
+  return v->size;
 }
 
 /** The maximum number of items the vector can hold before it has to grow. */
 unsigned int vect_current_capacity(vect_t *v) {
   assert(v != NULL);
-
-  /* [TODO] Complete the function */
-
-  return 0;
+  return v->capacity;
 }
 
