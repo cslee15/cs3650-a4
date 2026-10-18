@@ -5,6 +5,7 @@
 
 const int BUFFER_SIZE = 1024;
 
+/** Read one line from standard input and print its tokens, one per line. */
 int main(int argc, char **argv) {
   char buffer[BUFFER_SIZE];
 
